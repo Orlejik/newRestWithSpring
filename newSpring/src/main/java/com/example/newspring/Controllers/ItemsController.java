@@ -63,4 +63,15 @@ public class ItemsController {
         return new ResponseEntity<Items>(HttpStatus.OK);
     }
 
+//    @DeleteMapping
+//    public void deleteAllPassingEntities(List<Items> items){
+//        itemsRepository.deleteAll(items);
+//    }
+
+    @DeleteMapping
+    public void deleteAll(){
+        itemsRepository.deleteAll();
+    }
+
+
 }

@@ -16,6 +16,17 @@ import static io.restassured.RestAssured.given;
 public class InvTest {
     public final String url = "http://localhost:8082/";
 
+    public List<Item> returnAllItems() {
+        return given()
+                .when()
+                .get(url + "api/items")
+                .then()
+                .assertThat()
+                .statusCode(200)
+                .extract()
+                .jsonPath()
+                .getList("", Item.class);
+    }
 
     @Test
     public void addNewItem() {
@@ -65,19 +76,29 @@ public class InvTest {
             System.out.println("There are " + items.size() + " items in DB");
         }
         List<String> serialNumbersList = items.stream().map(Item::getSerialnumber).collect(Collectors.toList());
-        Set<String>  seralNumbersSet = new HashSet<>(serialNumbersList);
+        Set<String> seralNumbersSet = new HashSet<>(serialNumbersList);
         Assert.assertEquals(seralNumbersSet.size(), serialNumbersList.size());
         System.out.println("There are no duplicates");
     }
 
     @Test
-    public void deleteItem(){
+    public void deleteItem() {
         Specifications.installSpecs(Specifications.request(url), Specifications.responseOK200());
-
         given()
                 .when()
                 .delete("api/items/4")
                 .then()
                 .assertThat().statusCode(200);
+    }
+
+    @Test
+    public void deleteAllItems() {
+        Specifications.installSpecs(Specifications.request(url), Specifications.responseOK200());
+        given()
+                .when()
+                .delete("api/items")
+                .then()
+                .assertThat().statusCode(200);
+        Assert.assertTrue(returnAllItems().isEmpty());
     }
 }
