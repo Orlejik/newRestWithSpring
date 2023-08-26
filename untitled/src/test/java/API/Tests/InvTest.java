@@ -100,5 +100,6 @@ public class InvTest {
                 .then()
                 .assertThat().statusCode(200);
         Assert.assertTrue(returnAllItems().isEmpty());
+        System.out.println("The DB is empty!");
     }
 }
